@@ -33,6 +33,7 @@ body {
 .titleBar.tab.content {
     margin-left: 13px;
     margin-right: 13px;
+    margin-top: -2px;
     display: flex;
     transform: translateY(30%);
 }
@@ -85,4 +86,42 @@ body {
 }
 .titleBar.tab.container[data-tab-active="false"] > .titleBar.tab.containerBgContainer > svg {
     display: none;
+}
+.titleBar.tab.container[data-tab-active="false"] > .titleBar.tab.containerBgContainer > div {
+    background-color: unset;
+    width: 95%;
+    height: 75%;
+    transition: 0.4s background-color;
+    position: absolute;
+    border-radius: 10px;
+    left: 50%;
+    transform: translate(-50%);
+}
+
+.titleBar.tab.container[data-tab-active="false"]:hover > .titleBar.tab.containerBgContainer > div {
+    background-color: var(--title-bar-tab-color);
+}
+
+.titleBar.tab.separator {
+    position: absolute;
+    width: 2px;
+    height: 15px;
+    background-color: unset;
+    top: 25%;
+    transition: 0.4s background-color;
+    transform: translateY(-25%);
+}
+
+.titleBar.tab.separator.right {
+    left: 100%;
+}
+
+.titleBar.tab.container[data-tab-active="false"] > .titleBar.tab.separator {
+    background-color: gray;
+}
+.titleBar.tab.container:first-child[data-tab-active="false"] > .titleBar.tab.separator.left {
+    background-color: unset;
+}
+.titleBar.tab.container:last-child[data-tab-active="false"] > .titleBar.tab.separator.right {
+    background-color: unset;
 }
