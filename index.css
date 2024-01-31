@@ -117,11 +117,23 @@ body {
 }
 
 .titleBar.tab.container[data-tab-active="false"] > .titleBar.tab.separator {
-    background-color: gray;
+    background-color: rgb(66, 66, 66);
 }
 .titleBar.tab.container:first-child[data-tab-active="false"] > .titleBar.tab.separator.left {
     background-color: unset;
 }
 .titleBar.tab.container:last-child[data-tab-active="false"] > .titleBar.tab.separator.right {
+    background-color: unset;
+}
+.titleBar.tab.container[data-tab-active="false"]:hover > .titleBar.tab.separator {
+    background-color: unset;
+}
+.titleBar.tab.container[data-tab-active="false"]:hover:has(+.titleBar.tab.container[data-tab-active="false"]) > .titleBar.tab.separator {
+    background-color: unset;
+}
+.titleBar.tab.container[data-tab-active="true"] + .titleBar.tab.container[data-tab-active="false"] > .titleBar.tab.separator.left {
+    background-color: unset;
+}
+.titleBar.tab.container[data-tab-active="false"]:hover + .titleBar.tab.container[data-tab-active="false"] >  .titleBar.tab.separator {
     background-color: unset;
 }
