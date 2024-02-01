@@ -3,7 +3,7 @@
 :root {
     --title-bar-color: #1c1c1c;
     --title-bar-tab-color: #3f3f3f;
-    --title-bar-tab-text-color: white;
+    --title-bar-tab-text-color: #dedede;
 }
 
 body {
@@ -21,21 +21,22 @@ body {
 .titleBar.container {
     background-color: var(--title-bar-color);
     width: 100%;
-    height: 2.75em;
+    height: 2.58em;
 }
 .titleBar.tab.container {
     height: 2.25em;
     max-width: 15.5em;
-    transform: translateY(0.5em);
+    transform: translateY(0.3em);
     color: var(--title-bar-tab-text-color);
     display: inline-block;
+    transition: width 0.4s;
 }
 .titleBar.tab.content {
     margin-left: 13px;
     margin-right: 13px;
-    margin-top: -2px;
     display: flex;
     transform: translateY(30%);
+    transition: opacity 0.2s;
 }
 .titleBar.tab.iconContainer {
     max-width: 18px;
@@ -50,12 +51,13 @@ body {
     width: 100%;
     z-index: -1;
     fill: var(--title-bar-tab-color);
+    transform: translateY(2px);
 }
 .titleBar.tab.title {
     color: var(--title-bar-tab-text-color);
-    margin-top: 4px;
+    margin-top: 2px;
     font-size: 12px;
-    font-family: "Roboto", sans-serif;
+    font-family: 'Segoe UI', Tahoma, sans-serif;
 }
 .titleBar.tab.icon {
     margin-top: 1px;
@@ -79,7 +81,9 @@ body {
     height: 2.1em;
     border-radius: 10px;
     margin-left: 5px;
-    transform: translateY(25%);
+    margin-top: -0.05em;
+    transform: translate(2px, 27%);
+    z-index: 1;
 }
 .titleBar.tab.container[data-tab-active="true"] > .titleBar.tab.containerBgContainer > svg {
     display: block;
@@ -95,7 +99,7 @@ body {
     position: absolute;
     border-radius: 10px;
     left: 50%;
-    transform: translate(-50%);
+    transform: translate(-50%, 2px);
 }
 
 .titleBar.tab.container[data-tab-active="false"]:hover > .titleBar.tab.containerBgContainer > div {
@@ -109,7 +113,8 @@ body {
     background-color: unset;
     top: 25%;
     transition: 0.4s background-color;
-    transform: translateY(-25%);
+    transform: translateY(-10%);
+
 }
 
 .titleBar.tab.separator.right {
@@ -121,19 +126,33 @@ body {
 }
 .titleBar.tab.container:first-child[data-tab-active="false"] > .titleBar.tab.separator.left {
     background-color: unset;
+    transition: none;
 }
 .titleBar.tab.container:last-child[data-tab-active="false"] > .titleBar.tab.separator.right {
     background-color: unset;
+    transition: none;
+    display: none;
 }
 .titleBar.tab.container[data-tab-active="false"]:hover > .titleBar.tab.separator {
     background-color: unset;
+    transition: none;
 }
 .titleBar.tab.container[data-tab-active="false"]:hover:has(+.titleBar.tab.container[data-tab-active="false"]) > .titleBar.tab.separator {
     background-color: unset;
+    transition: none;
 }
 .titleBar.tab.container[data-tab-active="true"] + .titleBar.tab.container[data-tab-active="false"] > .titleBar.tab.separator.left {
     background-color: unset;
+    transition: none;
 }
 .titleBar.tab.container[data-tab-active="false"]:hover + .titleBar.tab.container[data-tab-active="false"] >  .titleBar.tab.separator {
     background-color: unset;
+    transition: none;
+}
+.addressBar.container {
+    height: 3em;
+    width: 100%;
+    background-color: var(--title-bar-tab-color);
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
 }
