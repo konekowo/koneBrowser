@@ -57,7 +57,7 @@ body {
     color: var(--title-bar-tab-text-color);
     margin-top: 2px;
     font-size: 12px;
-    font-family: 'Segoe UI', Tahoma, sans-serif;
+    font-family: system-ui;
 }
 .titleBar.tab.icon {
     margin-top: 1px;
