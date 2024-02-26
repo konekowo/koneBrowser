@@ -1,7 +1,11 @@
 import {TabManager} from "./TabManager";
+import {v4} from "uuid";
 
 export class Tab {
     private isActive: boolean = false;
+    public isDragging: boolean = false;
+    public lastX = 0;
+    public lastElemX = 0;
     private container: HTMLDivElement;
 
     public constructor(title: string, activate?: boolean) {
@@ -26,6 +30,7 @@ export class Tab {
             throw new Error("Could not get tabs strip!");
         }
         this.container.style.width = "0";
+        this.container.setAttribute("data-tab-isDragging", "false");
         this.isActive = false;
 
         const contentElem: HTMLDivElement | null = this.container.querySelector(".titleBar.tab.content");
@@ -42,15 +47,61 @@ export class Tab {
 
         TabManager.register(this);
 
-        this.container.addEventListener("mousedown", () => {
+        this.container.addEventListener("mousedown", (e) => {
+            this.setDragging(true, e);
             if (!this.getActive()){
                 TabManager.tabs.forEach((tab: Tab) => {
                    tab.setActive(false);
                 });
                 this.setActive(true);
             }
+
+
+            const mouseUp = (e: MouseEvent) => {
+                if (this.getDragging()) {
+                    this.setDragging(false, e);
+                }
+                document.removeEventListener("mouseup", mouseUp);
+            }
+
+            document.addEventListener("mouseup", mouseUp);
         });
+
         this.setActive(activate);
+    }
+
+    public setDragging(isDragging: boolean, e: MouseEvent){
+        this.isDragging = isDragging;
+        this.container.setAttribute("data-tab-isDragging", "" + this.isDragging);
+
+        if (this.isDragging) {
+            this.lastElemX = 0;
+            this.lastX = 0;
+            this.lastX = e.clientX;
+            this.container.style.zIndex = "999";
+            document.addEventListener("mousemove", this.startDrag);
+        }
+        else {
+            // wait for animation to be done
+            setTimeout(() => {
+                this.container.style.zIndex = "unset";
+            }, 400);
+            this.container.style.transform = "translateY(0.3em)";
+            document.removeEventListener("mousemove", this.startDrag);
+            this.lastElemX = 0;
+            this.lastX = 0;
+        }
+    }
+
+    public startDrag = (e: MouseEvent) => {
+        this.container.style.transform = "translate("+(this.lastElemX - (this.lastX - e.clientX))+"px, 0.3em)";
+        this.lastElemX = (this.lastElemX - (this.lastX - e.clientX));
+        this.lastX = e.clientX;
+    }
+
+
+    public getDragging(){
+        return this.isDragging;
     }
 
     public setActive(isActive :boolean) {
@@ -79,4 +130,6 @@ export class Tab {
     public getActive(){
         return this.isActive;
     }
+
+
 }
