@@ -20,7 +20,6 @@ body {
 
 .titleBar.container {
     background-color: rgba(0,0,0,0);
-    width: 100%;
     height: 2.58em;
 }
 .titleBar.tab.container {
@@ -72,6 +71,7 @@ body {
     transform: translateX(25%);
 }
 .titleBar.tabs.container {
+    width: calc(100% - 60px);
     display: flex;
 }
 .titleBar.searchTabsButton > img {

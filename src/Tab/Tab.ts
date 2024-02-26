@@ -7,6 +7,7 @@ export class Tab {
     public lastX = 0;
     public lastElemX = 0;
     private container: HTMLDivElement;
+    private tabsContainer: HTMLDivElement;
 
     public constructor(title: string, activate?: boolean) {
         if (activate == null) {
@@ -25,7 +26,7 @@ export class Tab {
             "    <span class='titleBar tab title'>New Tab</span>" +
             "</div>" +
             "<div class='titleBar tab separator right'></div>";
-        const parent = document.querySelector(".titleBar.tabs.container");
+        const parent: HTMLDivElement | null = document.querySelector(".titleBar.tabs.container");
         if (!parent) {
             throw new Error("Could not get tabs strip!");
         }
@@ -39,7 +40,7 @@ export class Tab {
         }
         contentElem.style.opacity = "0";
         parent.appendChild(this.container);
-
+        this.tabsContainer = parent;
         setTimeout(() => {
             this.container.style.width = "100%";
             contentElem.style.opacity = "1";
@@ -73,7 +74,11 @@ export class Tab {
     public setDragging(isDragging: boolean, e: MouseEvent){
         this.isDragging = isDragging;
         this.container.setAttribute("data-tab-isDragging", "" + this.isDragging);
-
+        const parent: HTMLDivElement | null = document.querySelector(".titleBar.tabs.container");
+        if (!parent) {
+            throw new Error("Could not get tabs strip!");
+        }
+        this.tabsContainer = parent;
         if (this.isDragging) {
             this.lastElemX = 0;
             this.lastX = 0;
@@ -94,8 +99,15 @@ export class Tab {
     }
 
     public startDrag = (e: MouseEvent) => {
-        this.container.style.transform = "translate("+(this.lastElemX - (this.lastX - e.clientX))+"px, 0.3em)";
-        this.lastElemX = (this.lastElemX - (this.lastX - e.clientX));
+        let elemX = (this.lastElemX - (this.lastX - e.clientX));
+        if (elemX + this.container.offsetWidth +this.container.offsetLeft > this.tabsContainer.offsetLeft + this.tabsContainer.offsetWidth) {
+           elemX = this.tabsContainer.offsetLeft + this.tabsContainer.offsetWidth - this.container.offsetWidth - this.container.offsetLeft;
+        }
+        else if (elemX + this.container.offsetLeft < this.tabsContainer.offsetLeft) {
+            elemX = this.tabsContainer.offsetLeft - this.container.offsetLeft;
+        }
+        this.container.style.transform = "translate(" + elemX + "px, 0.3em)";
+        this.lastElemX = elemX;
         this.lastX = e.clientX;
     }
 
