@@ -19,7 +19,7 @@ body {
 }
 
 .titleBar.container {
-    background-color: var(--title-bar-color);
+    background-color: rgba(0,0,0,0);
     width: 100%;
     height: 2.58em;
 }
@@ -32,7 +32,7 @@ body {
     transition: width 0.4s;
 }
 .titleBar.tab.content {
-    margin-left: 13px;
+    margin-left: 8px;
     margin-right: 13px;
     display: flex;
     transform: translateY(30%);
@@ -84,12 +84,15 @@ body {
     height: 2.1em;
     border-radius: 10px;
     margin-left: 5px;
+    margin-right: 4px;
     margin-top: -0.05em;
     transform: translate(2px, 27%);
     z-index: 1;
 }
 .titleBar.tab.container[data-tab-active="true"] > .titleBar.tab.containerBgContainer > svg {
     display: block;
+    width: calc(100% + 8px);
+    transform: translate(-4px, 2px);
 }
 .titleBar.tab.container[data-tab-active="false"] > .titleBar.tab.containerBgContainer > svg {
     display: none;
@@ -148,7 +151,15 @@ body {
     background-color: unset;
     transition: none;
 }
-.titleBar.tab.container[data-tab-active="false"]:hover + .titleBar.tab.container[data-tab-active="false"] >  .titleBar.tab.separator {
+.titleBar.tab.container[data-tab-active="true"]:has(+.titleBar.tab.container[data-tab-active="false"]) > .titleBar.tab.separator.right {
+    background-color: unset;
+    transition: none;
+}
+.titleBar.tab.container[data-tab-active="false"]:hover + .titleBar.tab.container[data-tab-active="false"] >  .titleBar.tab.separator.left {
+    background-color: unset;
+    transition: none;
+}
+.titleBar.tab.container[data-tab-active="false"]:has(+.titleBar.tab.container[data-tab-active="false"]) > .titleBar.tab.separator.right {
     background-color: unset;
     transition: none;
 }
