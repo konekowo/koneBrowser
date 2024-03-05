@@ -10,6 +10,7 @@
         "serve": "npx webpack-dev-server --mode development --progress --color"
     },
     "devDependencies": {
+        "@types/jquery": "^3.5.29",
         "css-loader": "^4.3.0",
         "file-loader": "^6.1.0",
         "style-loader": "^1.2.1",
@@ -21,6 +22,7 @@
     },
     "dependencies": {
         "@types/uuid": "^9.0.7",
+        "jquery": "^3.7.1",
         "uuid": "^9.0.1"
     }
 }

@@ -1,18 +1,24 @@
 import {TabManager} from "./TabManager";
-import {v4} from "uuid";
+import {v4} from "uuid"
+import $ from "jquery";
+declare let global: any;
+global.jQuery = $;
 
 export class Tab {
     private isActive: boolean = false;
     public isDragging: boolean = false;
     public lastX = 0;
     public lastElemX = 0;
-    private container: HTMLDivElement;
+    protected container: HTMLDivElement;
     private tabsContainer: HTMLDivElement;
+    private readonly uuid: string;
+    private isMoving = false;
 
     public constructor(title: string, activate?: boolean) {
         if (activate == null) {
             activate = true;
         }
+        this.uuid = v4();
         this.container = document.createElement("div");
         this.container.className = "titleBar tab container";
         this.container.innerHTML = "" +
@@ -32,6 +38,7 @@ export class Tab {
         }
         this.container.style.width = "0";
         this.container.setAttribute("data-tab-isDragging", "false");
+        this.container.setAttribute("data-tab-uuid", this.getUUID());
         this.isActive = false;
 
         const contentElem: HTMLDivElement | null = this.container.querySelector(".titleBar.tab.content");
@@ -90,7 +97,7 @@ export class Tab {
             // wait for animation to be done
             setTimeout(() => {
                 this.container.style.zIndex = "unset";
-            }, 400);
+            }, 200);
             this.container.style.transform = "translateY(0.3em)";
             document.removeEventListener("mousemove", this.startDrag);
             this.lastElemX = 0;
@@ -107,10 +114,58 @@ export class Tab {
             elemX = this.tabsContainer.offsetLeft - this.container.offsetLeft;
         }
         this.container.style.transform = "translate(" + elemX + "px, 0.3em)";
+        for (let i = 0; i < TabManager.tabs.length; i++) {
+            let tab = TabManager.tabs[i].container;
+            if (tab == this.container){
+                continue;
+            }
+            let rect = tab.getBoundingClientRect();
+            let rectWidth = rect.right - rect.left;
+            let containerRect = this.container.getBoundingClientRect();
+            if (!(containerRect.right < rect.left ||
+                containerRect.left > rect.right ||
+                containerRect.bottom < rect.top ||
+                containerRect.top > rect.bottom)){
+                if (containerRect.right > rect.left + (rectWidth/2) &&
+                    containerRect.left < rect.right - (rectWidth/2)){
+                    if (containerRect.left < rect.right - (rectWidth/2) && containerRect.right > rect.right) {
+                        TabManager.tabs[i].moveRight();
+                        elemX = (elemX+this.container.offsetWidth);
+                    }
+                    else{
+                        TabManager.tabs[i].moveLeft();
+                        elemX = (elemX-this.container.offsetWidth);
+                    }
+
+                    this.container.style.transform = "translate("+elemX+"px, 0.3em)";
+                }
+            }
+        }
+        console.log(elemX)
         this.lastElemX = elemX;
         this.lastX = e.clientX;
     }
 
+    public moveRight(){
+        if (!this.isMoving){
+            this.isMoving = true;
+            let wrapper = $( this.container ).closest(".titleBar.tab.container");
+            wrapper.insertAfter(wrapper.next());
+            setTimeout(()=> {
+                this.isMoving = false;
+            },400);
+        }
+    }
+    public moveLeft(){
+        if (!this.isMoving){
+            this.isMoving = true;
+            let wrapper = $( this.container ).closest(".titleBar.tab.container");
+            wrapper.insertBefore(wrapper.prev());
+            setTimeout(()=> {
+                this.isMoving = false;
+            },200);
+        }
+    }
 
     public getDragging(){
         return this.isDragging;
@@ -137,6 +192,10 @@ export class Tab {
                 }
             }
         }
+    }
+
+    public getUUID() {
+        return this.uuid;
     }
 
     public getActive(){
